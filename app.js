@@ -1,80 +1,96 @@
-function showTemperature(response) {
-  let h1 = document.querySelector("#city");
-  let temperature = Math.round(response.data.main.temp);
-  let temperatureElement = document.querySelector("#temperature");
-  let description = document.querySelector("#temperature-description");
-  h1.innerHTML = response.data.name;
-  temperatureElement.innerHTML = `${temperature}°C`;
-  description.innerHTML = response.data.weather[0].description;
+function formatDate(timestamp) {
+let date = new Date(timestamp);
+let hours = date.getHours();
+if (hours < 10) {
+  hours =`0${hours}`;
 }
 
-function showPosition(position) {
-  let h1 = document.querySelector("h1");
-  h1.innerHTML = `Your Latitude is ${position.coords.latitude} and your
-  longitude is ${position.coords.longitude}`;
-  console.log();
-  console.log(position.coords.longtiude);
-}
+let minutes = date.getMinutes();
+  if (minutes < 10) {
+     minutes = `0${minutes}`;
+    }
 
-function getCurrentPositon() {
-  navigator.geolocation.getCurrentPosition(showPosition);
-}
-
-let button = document.querySelector("button");
-button.addEventListener("click", getCurrentPositon);
-
-let now = new Date();
-
-let h2 = document.querySelector("h2");
-
-let date = now.getDate();
-let hours = now.getHours();
-let minutes = now.getMinutes();
-let year = now.getFullYear();
-
-let days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
-let day = days[now.getDay()];
-
-let months = [
-  "Jan",
-  "Feb",
-  "March",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
+let days = [
+  "Sunday", 
+  "Monday", 
+  "Tuesday", 
+  "Wednesday", 
+  "Thursday", 
+  "Friday", 
+  "Saturday"
 ];
-let month = months[now.getMonth()];
-
-h2.innerHTML = `${day} ${month} ${date}, ${hours}:${minutes}, ${year}`;
-
-function search(event) {
-  event.preventDefault();
-  let searchInput = document.querySelector("#search-text-input");
-
-  let h1 = document.querySelector("h1");
-  if (searchInput.value) {
-    h1.innerHTML = `Search for ${searchInput.value}...`;
-    searchCity(searchInput.value);
-  } else {
-    h1.innerHTML = null;
-    alert("Please type a city");
-  }
+let day = days[date.getDay()];
+return `${day} ${hours}:${minutes}`;
 }
 
-function searchCity(city) {
+function displayTemperature(response) {
+  console.log(response.data);
+  let temperatureElement = document.querySelector("#temperature");
+  let cityElement = document.querySelector("#city");
+  let descriptionElement = document.querySelector("#description");
+  let humidityElement = document.querySelector("#humidity");
+  let windElement = document.querySelector("#wind");
+  let dateElement = document.querySelector("#date");
+  let iconElement = document.querySelector("#icon");
+
+  celsiusTemperature = response.data.main.temp;
+  
+  temperatureElement.innerHTML = Math.round(response.data.main.temp);
+  cityElement.innerHTML = response.data.name;
+  description.innerHTML = response.data.weather[0].description;
+  humidityElement.innerHTML = response.data.main.humidity;
+  windElement.innerHTML = Math.round.apply(response.data.wind.speed);
+  dateElement.innerHTML = formatDate(response.data.dt * 1000);
+  iconElement.setAttribute
+  "src",
+   `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+   iconElement.setAttribute("alt", response.data.wether[0].description);
+}
+
+function search(city) {
   let apiKey = "6cd0b66db68ec702cf737675d887b164";
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
-  axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
+  let city = "Hong Kong"
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=$
+  {apiKey}units=metric`;
+  axios.get(apiUrl).then(showTemperature);
 }
+
+function handleSubmit(event) {
+  event.preventDefault();
+  let cityInputElement = document.querySelector("#city-input");
+  search(cityInputElement.vaule);
+}
+
+function displayFahrenheitTemperature(event) {
+  event.preventDefault();
+  let temperatureElement = document.querySelector("#temperature");
+
+  celsiusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
+  let fahrenhietTemperature = (temperatureElement.innerHTML * 9) / 5 + 32;
+  temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
+}
+
+function displayCelsiusTemperature(event){
+  event.preventDefault();
+  celsiusLink.classList.add("active");
+  fahrenheitLink.classLlist.remove("active");
+  let temperatureElement = document.querySelector("#temperature");
+  temperatureElement.innerHTML = Math.round(celsiusTemperature);
+}
+
+let celsiusTemperature = null;
 
 let form = document.querySelector("#search-form");
+form.addEventListener("submit", handleSubmit);
 
-form.addEventListener("submit", search);
+let fahrenheit = document.querySelector("#fahrenheit-link");
+fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
+
+let celsius = document.querySelector("#celsius-link");
+celsiusLink.addEventListener("click", displayCelsiusTemperature);
+
+search("Hong Kong");
+
 
 
