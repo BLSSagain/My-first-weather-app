@@ -21,21 +21,31 @@
         autofocus="on"
         id="search-text-input"
       />
-      <input type="submit" value="Search" /> <button>Current Location</button>
+      <input type="submit" value="Search" /> 
     </form>
   </div>
   <h1 id="city">
-    Hong Kong
   </h1>
-  <h2>
-    Thur Sep, 15, 10:00 2022
-  </h2>
-  <h3 id="temperature-description">
-    Mostly Sunny
-  </h3>
-  <h4 id="temperature">
-    26°C
-  </h4>
+  <ul>
+    <li>Previously updated: <span id="date"></span></li>
+    <li id="description"></li>
+  </ul>
+  <div class="row">
+  <div class="col-6">
+  <div class="d-flex weather-temperature">
+  <img src="" alt="Clear" id="icon" /> 
+    <strong id="temperature"></strong>
+    <span class="units">
+    <a href="#" id="celsius-link" class="active">°C</a> |
+    <a href="#" id="celsius-link">°F</a>
+  </span>
+  </div>
+</div>
+</div>
+<ul>
+  <li>Humidity: <span id="humidity"></span>%</li>
+  <li>Wind: <span id="wind"></span>mph</li>
+</ul>
 <script src="js/app.js"></script>
 </body>
 </html>
